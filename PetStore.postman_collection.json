@@ -1,0 +1,816 @@
+{
+	"info": {
+		"_postman_id": "ef233e2b-9dc5-4a7f-9b66-e4f055c9377b",
+		"name": "PetStore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24060315"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var req = JSON.parse(request.data)\r",
+									"console.log(req.username)\r",
+									"pm.collectionVariables.set(\"username\", req.username);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"    pm.response.to.have.property(\"code\", 200).to.be.a('number');\r",
+									"    pm.expect(pm.response).to.have.status(200)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Properties from body are correct\", function () {\r",
+									"    console.log(pm.response.json())\r",
+									"    pm.expect(pm.response.json().code).to.be.a('number')\r",
+									"    pm.expect(pm.response.json().type).to.be.a('string')\r",
+									"    pm.expect(pm.response.text()).to.include(\"type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"pm.response.to.have.header(\"Content-Type\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 9,\r\n  \"username\": \"roncarcla\",\r\n  \"firstName\": \"Carla\",\r\n  \"lastName\": \"Franco\",\r\n  \"email\": \"roncarcla18@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"27999914216\",\r\n  \"userStatus\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_environment}}/user",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 9,\r\n  \"username\": \"roncarcla\",\r\n  \"firstName\": \"Carla\",\r\n  \"lastName\": \"Franco\",\r\n  \"email\": \"roncarcla18@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"phone\": \"27999914216\",\r\n  \"userStatus\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_environment}}/user",
+									"host": [
+										"{{base_url_environment}}"
+									],
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 02 Jan 2023 19:09:08 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, DELETE, PUT"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, api_key, Authorization"
+								},
+								{
+									"key": "Server",
+									"value": "Jetty(9.2.9.v20150224)"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"type\": \"unknown\",\n    \"message\": \"9\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"\r",
+									"    const responseJson = pm.response.json();\r",
+									"    console.log(responseJson)\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(responseJson).to.have.property('type')\r",
+									"    pm.response.to.have.header('Content-type', 'application/json')\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"code\": {\"type\": \"number\"},\r",
+									"        \"type\": {\"type\": \"string\"},\r",
+									"        \"message\": {\"type\": \"string\"}\r",
+									"    },\r",
+									"    required : [\"code\", \"type\", \"message\"]\r",
+									"};\r",
+									"\r",
+									"pm.test('Schema is valid', function () {\r",
+									"\r",
+									"    pm.expect(pm.response.json()).to.have.jsonSchema(schema);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_environment}}/user/login?username=roncarcla&password=123456",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"user",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "roncarcla"
+								},
+								{
+									"key": "password",
+									"value": "123456"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_environment}}/user/login?username=roncarcla&password=123456",
+									"host": [
+										"{{base_url_environment}}"
+									],
+									"path": [
+										"user",
+										"login"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "roncarcla"
+										},
+										{
+											"key": "password",
+											"value": "123456"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 02 Jan 2023 19:14:30 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, DELETE, PUT"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, api_key, Authorization"
+								},
+								{
+									"key": "X-Expires-After",
+									"value": "Mon Jan 02 20:14:30 UTC 2023"
+								},
+								{
+									"key": "X-Rate-Limit",
+									"value": "5000"
+								},
+								{
+									"key": "Server",
+									"value": "Jetty(9.2.9.v20150224)"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"type\": \"unknown\",\n    \"message\": \"logged in user session:1672686870594\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get by username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"\r",
+									"    const responseJson = pm.response.json();\r",
+									"    console.log(responseJson)\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(responseJson).to.have.property('phone')\r",
+									"    pm.response.to.have.header('Content-type', 'application/json')\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_environment}}/user/{{username}}",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"user",
+								"{{username}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get by username",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_environment}}/user/roncarcla",
+									"host": [
+										"{{base_url_environment}}"
+									],
+									"path": [
+										"user",
+										"roncarcla"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 02 Jan 2023 19:16:14 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, DELETE, PUT"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, api_key, Authorization"
+								},
+								{
+									"key": "Server",
+									"value": "Jetty(9.2.9.v20150224)"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 9,\n    \"username\": \"roncarcla\",\n    \"firstName\": \"Carla\",\n    \"lastName\": \"Franco\",\n    \"email\": \"roncarcla18@gmail.com\",\n    \"password\": \"123456\",\n    \"phone\": \"27999914216\",\n    \"userStatus\": 0\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete by username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"    url: pm.environment.get('base_url_environment')+ '/user',\r",
+									"    method: 'POST',\r",
+									"    header: {'Content-type': 'application/json'},\r",
+									"    body:{\r",
+									"        mode:'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            id: 9,\r",
+									"            username: \"roncarcla\",\r",
+									"            firstName: \"Carla\",\r",
+									"            lastName: \"Franco\",\r",
+									"            email: \"roncarcla18@gmail.com\",\r",
+									"            password: \"123456\",\r",
+									"            phone: \"27999914216\",\r",
+									"            userStatus: 0\r",
+									"        })\r",
+									"    }\r",
+									"}\r",
+									"    , function (err, response) {\r",
+									"        console.log(response.json());   \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.get(\"username\");\r",
+									"\r",
+									"pm.test(\"Status code name has string\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message return name of person deleted\", function() {\r",
+									"\r",
+									"    pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"username\"))\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_environment}}/user/{{username}}",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"user",
+								"{{username}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete by username",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_environment}}/user/roncarcla",
+									"host": [
+										"{{base_url_environment}}"
+									],
+									"path": [
+										"user",
+										"roncarcla"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 02 Jan 2023 19:18:13 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET, POST, DELETE, PUT"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, api_key, Authorization"
+								},
+								{
+									"key": "Server",
+									"value": "Jetty(9.2.9.v20150224)"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 200,\n    \"type\": \"unknown\",\n    \"message\": \"roncarcla\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Pet",
+			"item": [
+				{
+					"name": "Create new Pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matchers properties\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('id', 2)\r",
+									"    pm.expect(pm.response.json()).to.have.property('name', 'Max')\r",
+									"});\r",
+									"\r",
+									"console.log();\r",
+									"pm.collectionVariables.set(\"id\", pm.response.json().id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"category\": {\r\n        \"id\": 0,\r\n        \"name\": \"dog\"\r\n    },\r\n    \"name\": \"Max\",\r\n    \"photoUrls\": [\r\n        \"string\"\r\n    ],\r\n    \"tags\": [\r\n        {\r\n           \"id\": 0,\r\n           \"name\": \"string\" \r\n        }\r\n    ],\r\n    \"status\": \"available\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_environment}}/pet",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status codee is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(2);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_environment}}/pet/{{id}}",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"pet",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"code\": {\"type\": \"number\"},\r",
+									"        \"type\": {\"type\": \"string\"},\r",
+									"        \"message\": {\"type\": \"string\"}\r",
+									"    },\r",
+									"    required : [\"code\", \"type\", \"message\"]\r",
+									"};\r",
+									"pm.test('Schema is valid', function () {\r",
+									"\r",
+									"    pm.expect(pm.response.json()).to.have.jsonSchema(schema);\r",
+									"    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Hammytinho",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url_environment}}/pet/{{id}}",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"pet",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Pet",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"    url: pm.environment.get('base_url_environment')+ '/pet',\r",
+									"    method: 'POST',\r",
+									"    header: {'Content-type': 'application/json'},\r",
+									"    body:{\r",
+									"        mode:'raw',\r",
+									"        raw: JSON.stringify({\r",
+									"            \"id\": 2,\r",
+									"            \"category\": {\r",
+									"                \"id\": 0,\r",
+									"                \"name\": \"dog\"\r",
+									"            },\r",
+									"            \"name\": \"Max\",\r",
+									"            \"photoUrls\": [\r",
+									"                \"string\"\r",
+									"            ],\r",
+									"            \"tags\": [\r",
+									"                {\r",
+									"                   \"id\": 0,\r",
+									"                   \"name\": \"string\" \r",
+									"                }\r",
+									"            ],\r",
+									"            \"status\": \"available\"\r",
+									"        })\r",
+									"    }\r",
+									"}\r",
+									"    , function (err, response) {\r",
+									"        console.log(response.json());   \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.get(\"id\");\r",
+									"\r",
+									"pm.test(\"Status code name has string\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message return name of person deleted\", function() {\r",
+									"\r",
+									"    pm.expect(pm.response.text()).to.include(pm.collectionVariables.get(\"id\"))\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_environment}}/pet/{{id}}",
+							"host": [
+								"{{base_url_environment}}"
+							],
+							"path": [
+								"pet",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{api-key}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url_collection",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "string"
+		},
+		{
+			"key": "api-key",
+			"value": "special-key",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "roncarcla"
+		},
+		{
+			"key": "base_url_global",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}
